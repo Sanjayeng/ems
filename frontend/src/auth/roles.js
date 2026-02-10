@@ -3,7 +3,9 @@ const ROLES = {
     TL: "team_lead",
     MANAGER: "manager",
     ADMIN: "admin",
-    CXO: "cxo",
+    CTO: "cto",
+    CFO: "cfo",
+    COO: "coo",
     CEO: "ceo",
 };
 

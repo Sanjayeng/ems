@@ -1,19 +1,50 @@
 const stats = [
-    { label: "Total Departments", value: 12, icon: "" },
-    { label: "Total Managers", value: 25, icon: "" },
-    { label: "Total Team Leads", value: 50, icon: "" },
-    { label: "Total Interns", value: 120, icon: "" },
+    {
+        label: "Engineering Employees",
+        value: 86,
+        icon: "",
+    },
+    {
+        label: "Technical Managers",
+        value: 12,
+        icon: "",
+    },
+    {
+        label: "Team Leads",
+        value: 18,
+        icon: "",
+    },
+    {
+        label: "Engineering Interns",
+        value: 34,
+        icon: "",
+    },
 ];
 
 const activities = [
-    { title: "Q3 Strategy Meeting Scheduled", progress: 90 },
-    { title: 'New Department "AI Research" Created', progress: 80 },
-    { title: "New Department Chat System Created", progress: 65 },
-    { title: "Intern Program L&D Scheduled", progress: 50 },
-    { title: "Intern Program Q4 Started", progress: 35 },
+    {
+        title: "System Architecture Revamp (Microservices)",
+        progress: 85,
+    },
+    {
+        title: "Cloud Cost Optimization Initiative",
+        progress: 72,
+    },
+    {
+        title: "DevOps CI/CD Pipeline Upgrade",
+        progress: 65,
+    },
+    {
+        title: "Engineering Intern Onboarding Program",
+        progress: 55,
+    },
+    {
+        title: "Legacy System Migration to AWS",
+        progress: 40,
+    },
 ];
 
-const CxoDashboard = () => {
+const CtoDashboard = () => {
     return (
         <div className="space-y-8">
             {/* Stats */}
@@ -68,4 +99,4 @@ const CxoDashboard = () => {
     );
 };
 
-export default CxoDashboard;
+export default CtoDashboard;

@@ -34,13 +34,29 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUserManagement from "./pages/admin/AdminUserManagement";
 import AdminSettings from "./pages/admin/AdminSettings";
 
-/* CRO Pages */
-import CxoDashboard from "./pages/cxo/CxoDashboard";
-import CxoOrganization from "./pages/cxo/CxoOrganization";
-import CxoAnalytics from "./pages/cxo/CxoAnalytics";
-import CxoReports from "./pages/cxo/CxoReports";
-import CxoDepartmentChat from "./pages/cxo/CxoDepartmentChat";
-import CxoSettings from "./pages/cxo/CxoSettings";
+/* CTO Pages */
+import CtoDashboard from "./pages/cto/CtoDashboard";
+import CtoOrganization from "./pages/cto/CtoOrganization";
+import CtoAnalytics from "./pages/cto/CtoAnalytics";
+import CtoReports from "./pages/cto/CtoReports";
+import CtoDepartmentChat from "./pages/cto/CtoDepartmentChat";
+import CtoSettings from "./pages/cto/CtoSettings";
+
+/* CFO Pages */
+import CfoDashboard from "./pages/cfo/CfoDashboard";
+import CfoOrganization from "./pages/cfo/CfoOrganization";
+import CfoAnalytics from "./pages/cfo/CfoAnalytics";
+import CfoReports from "./pages/cfo/CfoReports";
+import CfoDepartmentChat from "./pages/cfo/CfoDepartmentChat";
+import CfoSettings from "./pages/cfo/CfoSettings";
+
+/* COO Pages */
+import CooDashboard from "./pages/coo/CooDashboard";
+import CooOrganization from "./pages/coo/CooOrganization";
+import CooAnalytics from "./pages/coo/CooAnalytics";
+import CooReports from "./pages/coo/CooReports";
+import CooDepartmentChat from "./pages/coo/CooDepartmentChat";
+import CooSettings from "./pages/coo/CooSettings";
 
 /* CEO Pages */
 import CeoDashboard from "./pages/ceo/CeoDashboard";
@@ -135,22 +151,60 @@ export const router = createBrowserRouter([
         ],
     },
 
-    /* ================= CXO ================= */
+    /* ================= CTO ================= */
     {
-        path: "/cxo",
+        path: "/cto",
         element: (
-            <ProtectedRoute allowedRoles={[ROLES.CXO]}>
+            <ProtectedRoute allowedRoles={[ROLES.CTO]}>
                 <DashboardLayout />
             </ProtectedRoute>
         ),
         children: [
             { index: true, element: <Navigate to="dashboard" /> },
-            { path: "dashboard", element: <CxoDashboard /> },
-            { path: "organization", element: <CxoOrganization /> },
-            { path: "analytics", element: <CxoAnalytics /> },
-            { path: "reports", element: <CxoReports /> },
-            { path: "chat", element: <CxoDepartmentChat /> },
-            { path: "settings", element: <CxoSettings /> },
+            { path: "dashboard", element: <CtoDashboard /> },
+            { path: "organization", element: <CtoOrganization /> },
+            { path: "analytics", element: <CtoAnalytics /> },
+            { path: "reports", element: <CtoReports /> },
+            { path: "chat", element: <CtoDepartmentChat /> },
+            { path: "settings", element: <CtoSettings /> },
+        ],
+    },
+
+    /* ================= CFO ================= */
+    {
+        path: "/cfo",
+        element: (
+            <ProtectedRoute allowedRoles={[ROLES.CFO]}>
+                <DashboardLayout />
+            </ProtectedRoute>
+        ),
+        children: [
+            { index: true, element: <Navigate to="dashboard" /> },
+            { path: "dashboard", element: <CfoDashboard /> },
+            { path: "organization", element: <CfoOrganization /> },
+            { path: "analytics", element: <CfoAnalytics /> },
+            { path: "reports", element: <CfoReports /> },
+            { path: "chat", element: <CfoDepartmentChat /> },
+            { path: "settings", element: <CfoSettings /> },
+        ],
+    },
+
+    /* ================= COO ================= */
+    {
+        path: "/coo",
+        element: (
+            <ProtectedRoute allowedRoles={[ROLES.COO]}>
+                <DashboardLayout />
+            </ProtectedRoute>
+        ),
+        children: [
+            { index: true, element: <Navigate to="dashboard" /> },
+            { path: "dashboard", element: <CooDashboard /> },
+            { path: "organization", element: <CooOrganization /> },
+            { path: "analytics", element: <CooAnalytics /> },
+            { path: "reports", element: <CooReports /> },
+            { path: "chat", element: <CooDepartmentChat /> },
+            { path: "settings", element: <CooSettings /> },
         ],
     },
 
