@@ -7,8 +7,10 @@ import { logout } from "../redux/authSlice";
 const Sidebar = () => {
     const dispatch = useDispatch();
 
-    const role = useSelector((state) => state.auth.role);
-    console.log(role);
+    // Pulling user details from Redux store
+    // Ensure your authSlice provides: name, role, position, and department_name
+    const { role, name, position, department_name } = useSelector((state) => state.auth);
+
     if (!role) return null;
 
     return (
@@ -16,17 +18,24 @@ const Sidebar = () => {
             className="w-64 bg-[#090E1A] text-white min-h-screen flex flex-col fixed left-0 top-0 h-screen z-40 shadow-lg"
             style={{ width: 256 }}
         >
-            <div className="flex items-center gap-3 px-4 py-4 mb-2 text-left text-white border-b border-gray-300/30">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-sm font-semibold">
-                    UN
+            {/* ---------------- USER INFO SECTION ---------------- */}
+            <div className="flex items-center gap-3 px-4 py-6 mb-2 text-left text-white border-b border-gray-300/30">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-sm font-semibold uppercase">
+                    {name?.substring(0, 2) || "UN"}
                 </div>
-                <div className="leading-tight">
-                    <p className="text-sm font-semibold">User Name</p>
-                    <p className="text-xs text-slate-300 capitalize">{role}</p>
+                <div className="leading-tight overflow-hidden">
+                    {/* User's Name */}
+                    <p className="text-sm font-semibold truncate">{name || "User Name"}</p>
+                    
+                    {/* Position / Department Name */}
+                    <p className="text-xs text-slate-300 capitalize truncate">
+                        {position || role} / {department_name || "Department"}
+                    </p>
                 </div>
             </div>
 
-            <div className="flex-1 px-3">
+            {/* ---------------- NAVIGATION LINKS ---------------- */}
+            <div className="flex-1 px-3 overflow-y-auto">
                 {MENU[role]?.map((item) => (
                     <NavLink
                         key={item}
@@ -45,9 +54,10 @@ const Sidebar = () => {
                 ))}
             </div>
 
+            {/* ---------------- LOGOUT BUTTON ---------------- */}
             <button
                 onClick={() => dispatch(logout())}
-                className="text-red-500 font-semibold py-2 w-full bg-transparent hover:bg-red-900/20 transition-colors duration-150 border-t border-[#2d3748] mt-auto cursor-pointer"
+                className="text-red-500 font-semibold py-4 w-full bg-transparent hover:bg-red-900/20 transition-colors duration-150 border-t border-[#2d3748] mt-auto cursor-pointer"
             >
                 Log Out
             </button>
