@@ -10,7 +10,23 @@ const MENU = {
     team_lead: ["dashboard", "intern-tasks", "reviews", "meetings", "chat"],
     manager: ["dashboard", "analytics", "reports", "meetings", "chat"],
     admin: ["dashboard", "users", "settings"],
-    cxo: [
+    cto: [
+        "dashboard",
+        "organization",
+        "analytics",
+        "reports",
+        "chat",
+        "settings",
+    ],
+    cfo: [
+        "dashboard",
+        "organization",
+        "analytics",
+        "reports",
+        "chat",
+        "settings",
+    ],
+    coo: [
         "dashboard",
         "organization",
         "analytics",

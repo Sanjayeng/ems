@@ -5,33 +5,41 @@ const departments = [
         id: 1,
         name: "Engineering",
         head: "John Smith",
-        employees: 45,
-        budget: "$1.2M",
+        employees: 38,
+        teamLeads: 6,
+        interns: 12,
+        budget: "$900K",
     },
     {
         id: 2,
-        name: "Sales",
-        head: "Jane Doe",
-        employees: 32,
-        budget: "$800K",
+        name: "Platform & Infrastructure",
+        head: "Sarah Chen",
+        employees: 14,
+        teamLeads: 3,
+        interns: 4,
+        budget: "$650K",
     },
     {
         id: 3,
-        name: "Marketing",
-        head: "Bob Wilson",
-        employees: 18,
-        budget: "$500K",
+        name: "QA & Testing",
+        head: "David Lee",
+        employees: 10,
+        teamLeads: 2,
+        interns: 6,
+        budget: "$250K",
     },
     {
         id: 4,
-        name: "Operations",
-        head: "Carol Brown",
-        employees: 28,
-        budget: "$600K",
+        name: "DevOps / SRE",
+        head: "Emily Davis",
+        employees: 8,
+        teamLeads: 2,
+        interns: 2,
+        budget: "$400K",
     },
 ];
 
-const CxoOrganization = () => {
+const CtoOrganization = () => {
     return (
         <div className="space-y-8">
             {/* Page Header */}
@@ -73,11 +81,25 @@ const CxoOrganization = () => {
                                 <div className="flex flex-wrap items-center gap-6 pt-2 text-slate-600">
                                     <div className="flex items-center gap-2">
                                         <Users className="h-5 w-5" />
-                                        <span>{dept.employees} employees</span>
+                                        <span>{dept.employees} engineers</span>
                                     </div>
 
                                     <div>
-                                        Budget:{" "}
+                                        Team Leads:{" "}
+                                        <span className="font-medium text-slate-700">
+                                            {dept.teamLeads}
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        Interns:{" "}
+                                        <span className="font-medium text-slate-700">
+                                            {dept.interns}
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        Tech Budget:{" "}
                                         <span className="font-medium text-slate-700">
                                             {dept.budget}
                                         </span>
@@ -92,4 +114,4 @@ const CxoOrganization = () => {
     );
 };
 
-export default CxoOrganization;
+export default CtoOrganization;

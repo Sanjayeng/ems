@@ -3,31 +3,47 @@ import { FileText, Download, Plus } from "lucide-react";
 const reports = [
     {
         id: 1,
-        name: "Quarterly Sales Performance",
-        description: "Performance from last month",
+        name: "Quarterly Financial Performance",
+        description: "Revenue, expenses, and profit analysis",
         date: "June 15, 2024",
-        author: "Jane Doe",
-        action: "view",
+        author: "Finance Department",
+        action: "download",
     },
     {
         id: 2,
-        name: "Project Status Summary",
-        description: "Overall project progress",
-        date: "June 15, 2024",
-        author: "Dean Delen",
-        action: "view",
+        name: "Department Budget vs Actual",
+        description: "Allocated budget compared to actual spend",
+        date: "June 14, 2024",
+        author: "Finance Controller",
+        action: "download",
     },
     {
         id: 3,
-        name: "Team Utilization Breakdown",
-        description: "Overtime analysis, 85%",
-        date: "June 15, 2024",
-        author: "Fume Telen",
+        name: "Cash Flow Statement",
+        description: "Operating, investing, and financing cash flows",
+        date: "June 13, 2024",
+        author: "Accounting Team",
+        action: "download",
+    },
+    {
+        id: 4,
+        name: "Expense Audit Report",
+        description: "Cost anomalies and compliance review",
+        date: "June 12, 2024",
+        author: "Internal Audit",
+        action: "download",
+    },
+    {
+        id: 5,
+        name: "Forecast & Runway Analysis",
+        description: "Projected burn rate and cash runway",
+        date: "June 10, 2024",
+        author: "Financial Planning",
         action: "download",
     },
 ];
 
-const CxoReports = () => {
+const CfoReports = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -122,4 +138,4 @@ const CxoReports = () => {
     );
 };
 
-export default CxoReports;
+export default CfoReports;
