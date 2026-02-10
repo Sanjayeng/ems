@@ -7,7 +7,13 @@ const MENU = {
         "chat",
         "profile",
     ],
-    team_lead: ["Dashboard", "Intern Tasks", "Submissions Review", "Meetings", "Department Chat"],
+     team_lead: [
+        { path: "dashboard", label: "Dashboard" },
+        { path: "intern-tasks", label: "Intern Tasks" },
+        { path: "submissions-review", label: "Submission Reviews" },
+        { path: "meetings", label: "Meetings" },
+        { path: "department-chat", label: "Department Chat" }
+    ],
     manager: ["dashboard", "analytics", "reports", "meetings", "chat"],
     admin: ["dashboard", "users", "settings"],
     cto: [

@@ -36,22 +36,32 @@ const Sidebar = () => {
 
             {/* ---------------- NAVIGATION LINKS ---------------- */}
             <div className="flex-1 px-3 overflow-y-auto">
-                {MENU[role]?.map((item) => (
-                    <NavLink
-                        key={item}
-                        to={`/${role}/${item}`}
-                        className={({ isActive }) =>
-                            `block px-3 ps-5 py-2 my-2 font-semibold rounded-lg capitalize transition-colors duration-150 ${
-                                isActive
-                                    ? "bg-[#10192D] text-blue-500"
-                                    : "hover:bg-[#10192D]"
-                            }`
-                        }
-                        end
-                    >
-                        {item.replace("-", " ")}
-                    </NavLink>
-                ))}
+               {MENU[role]?.map((menuItem) => {
+    // Check if it's a string or object
+    const path = typeof menuItem === 'string' ? menuItem : menuItem.path;
+    const label = typeof menuItem === 'string' 
+        ? menuItem.split("-").map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+          ).join(" ")
+        : menuItem.label;
+    
+    return (
+        <NavLink
+            key={path}
+            to={`/${role}/${path}`}
+            className={({ isActive }) =>
+                `block px-3 ps-5 py-2 my-2 font-semibold rounded-lg capitalize transition-colors duration-150 ${
+                    isActive
+                        ? "bg-[#10192D] text-blue-500"
+                        : "hover:bg-[#10192D]"
+                }`
+            }
+            end
+        >
+            {label}
+        </NavLink>
+    );
+})}
             </div>
 
             {/* ---------------- LOGOUT BUTTON ---------------- */}

@@ -111,9 +111,9 @@ export const router = createBrowserRouter([
             { index: true, element: <Navigate to="dashboard" /> },
             { path: "dashboard", element: <TlDashboard /> },
             { path: "intern-tasks", element: <TlInternTask /> },
-            { path: "reviews", element: <TlSubmissionsReview /> },
+            { path: "submissions-review", element: <TlSubmissionsReview /> },
             { path: "meetings", element: <TlMeetings /> },
-            { path: "chat", element: <TlDepartmentChat /> },
+            { path: "department-chat", element: <TlDepartmentChat /> },
         ],
     },
 
