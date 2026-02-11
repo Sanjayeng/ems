@@ -7,8 +7,6 @@ import { logout } from "../redux/authSlice";
 const Sidebar = () => {
     const dispatch = useDispatch();
 
-    // Pulling user details from Redux store
-    // Ensure your authSlice provides: name, role, position, and department_name
     const { role, name, position, department_name } = useSelector((state) => state.auth);
 
     if (!role) return null;
