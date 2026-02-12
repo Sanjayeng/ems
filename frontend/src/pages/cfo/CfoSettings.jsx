@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { User, Upload, Mail, Lock, Bell, Trash2 } from "lucide-react";
 
-const CxoSettings = () => {
+const CfoSettings = () => {
     const [form, setForm] = useState({
         name: "John Doe",
-        email: "john.doe@cxo.com",
+        email: "john.doe@cfo.com",
         currentPassword: "",
         newPassword: "",
         emailNotifications: false,
@@ -154,4 +154,4 @@ const CxoSettings = () => {
     );
 };
 
-export default CxoSettings;
+export default CfoSettings;
