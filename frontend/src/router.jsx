@@ -33,6 +33,7 @@ import ManagerDepartmentChat from "./pages/manager/ManagerDepartmentChat";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUserManagement from "./pages/admin/AdminUserManagement";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminChat from "./pages/admin/AdminChat"; // ADDED
 
 /* CTO Pages */
 import CtoDashboard from "./pages/cto/CtoDashboard";
@@ -71,14 +72,8 @@ import CeoOrganizationChat from "./pages/ceo/CeoOrganizationChat";
 import CeoSettings from "./pages/ceo/CeoSettings";
 
 export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Login />,
-    },
-    {
-        path: "/unauthorized",
-        element: <Unauthorized />,
-    },
+    { path: "/", element: <Login /> },
+    { path: "/unauthorized", element: <Unauthorized /> },
 
     /* ================= INTERN ================= */
     {
@@ -147,6 +142,7 @@ export const router = createBrowserRouter([
             { index: true, element: <Navigate to="dashboard" /> },
             { path: "dashboard", element: <AdminDashboard /> },
             { path: "users", element: <AdminUserManagement /> },
+            { path: "chat", element: <AdminChat /> }, // ADDED
             { path: "settings", element: <AdminSettings /> },
         ],
     },
