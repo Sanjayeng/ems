@@ -1,129 +1,165 @@
-import { useState } from "react";
-import { Search, Send, Paperclip, Hash } from "lucide-react";
+import { useState, useRef } from "react";
+import {
+    Search,
+    Send,
+    Paperclip,
+    Hash,
+    ChevronDown,
+    Users,
+    Briefcase,
+    File,
+    UserCircle
+} from "lucide-react";
 
-/* COO GROUP CHANNELS */
-const channels = [
-    {
-        id: "ops-general",
-        name: "Operations General",
-        description: "General operations discussion",
+/* OPERATIONS DATA */
+const opsData = {
+    managers: [
+        { id: 1, name: "Sarah Lee", role: "Ops Manager", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
+        { id: 2, name: "Michael O'Connell", role: "Logistics Head", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },
+        { id: 3, name: "Emily Davis", role: "Supply Chain", avatar: "https://randomuser.me/api/portraits/women/65.jpg" },
+    ],
+    channels: [
+        { id: "ops-general", name: "Operations General", description: "General operations discussion", type: "channel" },
+        { id: "daily-updates", name: "Daily Ops Updates", description: "Execution & status updates", type: "channel" },
+        { id: "incidents", name: "Incidents & Escalations", description: "Urgent operational issues", type: "channel" },
+    ],
+    group: {
+        id: "ops-team-group",
+        name: "Operations Core Group",
+        role: "Team Chat",
+        avatar: "https://ui-avatars.com/api/?name=OC&background=4f46e5&color=fff",
+        type: "group"
     },
-    {
-        id: "daily-updates",
-        name: "Daily Ops Updates",
-        description: "Daily execution & status updates",
-    },
-    {
-        id: "process",
-        name: "Process Improvements",
-        description: "Workflow & efficiency improvements",
-    },
-    {
-        id: "incidents",
-        name: "Incidents & Escalations",
-        description: "Operational issues & escalations",
-    },
-    {
-        id: "coordination",
-        name: "Cross-Team Coordination",
-        description: "Inter-department coordination",
-    },
-];
+};
 
-/* INITIAL GROUP MESSAGES */
 const initialMessages = {
     "ops-general": [
-        {
-            user: "COO Office",
-            text: "Welcome to Operations General.",
-            time: "9:00 AM",
-        },
-        {
-            user: "You",
-            text: "Let’s keep operations aligned here.",
-            time: "9:03 AM",
-            mine: true,
-        },
+        { from: "System", text: "Welcome to Operations General.", time: "9:00 AM", mine: false },
     ],
-    "daily-updates": [
-        {
-            user: "Operations Team",
-            text: "Daily ops report will be shared by EOD.",
-            time: "Yesterday",
-        },
-    ],
-    process: [],
-    incidents: [],
-    coordination: [],
+    1: [{ from: "Sarah Lee", text: "Did you review the logistics report?", time: "10:15 AM", mine: false }],
+    "ops-team-group": []
 };
 
 const CooDepartmentChat = () => {
-    const [activeChannel, setActiveChannel] = useState(channels[0]);
+    const [activeChat, setActiveChat] = useState(opsData.channels[0]);
     const [messages, setMessages] = useState(initialMessages);
     const [input, setInput] = useState("");
+    const [groupMembers, setGroupMembers] = useState(opsData.managers); 
+    const [showAddModal, setShowAddModal] = useState(false);
+    const fileInputRef = useRef(null);
 
-    const currentMessages = messages[activeChannel.id] || [];
+    const currentMessages = messages[activeChat.id] || [];
 
     const sendMessage = () => {
         if (!input.trim()) return;
 
+        const newMessage = {
+            from: "You",
+            text: input,
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            mine: true,
+            type: "text",
+        };
+
         setMessages((prev) => ({
             ...prev,
-            [activeChannel.id]: [
-                ...(prev[activeChannel.id] || []),
-                {
-                    user: "You",
-                    text: input,
-                    time: new Date().toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    }),
-                    mine: true,
-                },
-            ],
+            [activeChat.id]: [...(prev[activeChat.id] || []), newMessage],
         }));
-
         setInput("");
     };
 
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const newFileMessage = {
+            from: "You",
+            fileName: file.name,
+            fileUrl: URL.createObjectURL(file),
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            mine: true,
+            type: "file",
+        };
+
+        setMessages((prev) => ({
+            ...prev,
+            [activeChat.id]: [...(prev[activeChat.id] || []), newFileMessage],
+        }));
+        e.target.value = null;
+    };
+
     return (
-        <div className="flex h-[calc(100vh-6rem)] rounded-xl border border-gray-300 bg-white overflow-hidden">
-            {/* LEFT SIDEBAR */}
-            <div className="w-72 border-r border-gray-300 bg-slate-50 flex flex-col">
-                <div className="p-4 text-lg font-semibold">
-                    Operations Groups
+        <div className="flex h-[calc(100vh-6rem)] rounded-xl border border-gray-300 bg-white overflow-hidden font-sans">
+            {/* LEFT PANEL: NAVIGATION */}
+            <div className="w-80 border-r border-gray-300 bg-slate-50 flex flex-col overflow-y-auto">
+                <div className="p-4 font-bold text-xl text-slate-800 border-b border-gray-200">
+                    Operations Hub
                 </div>
 
-                {/* Search */}
-                <div className="px-4 pb-3">
-                    <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2">
+                {/* SEARCH */}
+                <div className="p-4">
+                    <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm">
                         <Search size={16} className="text-slate-400" />
-                        <input
-                            placeholder="Search channel..."
-                            className="w-full text-sm outline-none"
-                        />
+                        <input placeholder="Search chat..." className="w-full text-sm outline-none" />
                     </div>
                 </div>
 
-                {/* CHANNEL LIST */}
-                <div className="px-2 space-y-1">
-                    {channels.map((c) => (
+                {/* CHANNELS */}
+                <div className="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                    <Hash size={14} /> Channels
+                </div>
+                <div className="mt-2 space-y-1 px-2">
+                    {opsData.channels.map((c) => (
                         <button
                             key={c.id}
-                            onClick={() => setActiveChannel(c)}
-                            className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left ${
-                                activeChannel.id === c.id
-                                    ? "bg-indigo-100 text-indigo-700"
-                                    : "hover:bg-slate-100"
+                            onClick={() => setActiveChat(c)}
+                            className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                                activeChat.id === c.id ? "bg-indigo-600 text-white" : "hover:bg-slate-200 text-slate-700"
                             }`}
                         >
-                            <Hash size={16} />
+                            <Hash size={18} className={activeChat.id === c.id ? "text-white" : "text-slate-400"} />
+                            <span className="text-sm font-medium">{c.name}</span>
+                        </button>
+                    ))}
+                </div>
+
+                {/* GROUP CHAT */}
+                <div className="mt-6 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Team Groups</div>
+                <div className="mt-2 px-2">
+                    <button
+                        onClick={() => setActiveChat(opsData.group)}
+                        className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                            activeChat.id === opsData.group.id ? "bg-indigo-600 text-white" : "hover:bg-slate-200"
+                        }`}
+                    >
+                        <img src={opsData.group.avatar} className="h-9 w-9 rounded-full border border-gray-200" alt="group" />
+                        <div>
+                            <div className="text-sm font-medium">{opsData.group.name}</div>
+                            <div className={`text-xs ${activeChat.id === opsData.group.id ? "text-indigo-100" : "text-slate-500"}`}>
+                                {opsData.group.role}
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                {/* INDIVIDUAL MANAGERS */}
+                <div className="mt-6 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                    <ChevronDown size={14} /> Ops Managers
+                </div>
+                <div className="mt-2 space-y-1 px-2 mb-4">
+                    {opsData.managers.map((m) => (
+                        <button
+                            key={m.id}
+                            onClick={() => setActiveChat({ ...m, type: "individual" })}
+                            className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                                activeChat.id === m.id ? "bg-indigo-600 text-white" : "hover:bg-slate-200"
+                            }`}
+                        >
+                            <img src={m.avatar} className="h-9 w-9 rounded-full border border-gray-200" alt="user" />
                             <div>
-                                <div className="text-sm font-medium">
-                                    {c.name}
-                                </div>
-                                <div className="text-xs text-slate-500">
-                                    {c.description}
+                                <div className="text-sm font-medium">{m.name}</div>
+                                <div className={`text-xs ${activeChat.id === m.id ? "text-indigo-100" : "text-slate-500"}`}>
+                                    {m.role}
                                 </div>
                             </div>
                         </button>
@@ -131,79 +167,121 @@ const CooDepartmentChat = () => {
                 </div>
             </div>
 
-            {/* RIGHT CHAT AREA */}
-            <div className="flex flex-1 flex-col">
-                {/* HEADER */}
-                <div className="border-b border-gray-300 px-6 py-4">
-                    <div className="flex items-center gap-2">
-                        <Hash className="text-indigo-600" />
-                        <div>
-                            <div className="font-semibold">
-                                {activeChannel.name}
+            {/* RIGHT PANEL: CHAT WINDOW */}
+            <div className="flex flex-1 flex-col bg-white">
+                {/* CHAT HEADER */}
+                <div className="flex items-center justify-between border-b border-gray-300 px-6 py-4 bg-white">
+                    <div className="flex items-center gap-3">
+                        {activeChat.avatar ? (
+                            <img src={activeChat.avatar} className="h-10 w-10 rounded-full" alt="avatar" />
+                        ) : (
+                            <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                <Hash size={20} />
                             </div>
-                            <div className="text-sm text-slate-500">
-                                {activeChannel.description}
+                        )}
+                        <div>
+                            <div className="font-bold text-slate-800">{activeChat.name}</div>
+                            <div className="text-xs text-slate-500">
+                                {activeChat.description || activeChat.role} 
+                                {activeChat.type === "group" && ` • ${groupMembers.length} Members`}
                             </div>
                         </div>
                     </div>
+                    
+                    {activeChat.type === "group" && (
+                        <button 
+                            onClick={() => setShowAddModal(true)}
+                            className="text-xs bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full font-semibold hover:bg-indigo-100 transition-colors"
+                        >
+                            + Add Members
+                        </button>
+                    )}
                 </div>
 
-                {/* MESSAGES */}
-                <div className="flex-1 overflow-y-auto bg-slate-50 px-6 py-4 space-y-4">
-                    {currentMessages.length === 0 && (
-                        <div className="text-sm text-slate-400">
-                            No messages yet
-                        </div>
-                    )}
-
+                {/* MESSAGE AREA */}
+                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4 bg-slate-50/50">
                     {currentMessages.map((m, i) => (
-                        <div
-                            key={i}
-                            className={`max-w-[70%] rounded-xl px-4 py-2 text-sm ${
-                                m.mine
-                                    ? "ml-auto bg-indigo-600 text-white"
-                                    : "bg-slate-200 text-slate-800"
-                            }`}
-                        >
-                            {!m.mine && (
-                                <div className="text-xs font-semibold mb-1">
-                                    {m.user}
+                        <div key={i} className={`flex flex-col ${m.mine ? "items-end" : "items-start"}`}>
+                            <div className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
+                                m.mine ? "bg-indigo-600 text-white" : "bg-white border border-gray-200 text-slate-800"
+                            }`}>
+                                {!m.mine && (activeChat.type === "group" || activeChat.type === "channel") && (
+                                    <div className="text-[10px] font-bold uppercase mb-1 opacity-60">
+                                        {m.from}
+                                    </div>
+                                )}
+                                
+                                {m.type === "file" ? (
+                                    <a href={m.fileUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-medium underline decoration-indigo-200">
+                                        <File size={16} /> {m.fileName}
+                                    </a>
+                                ) : (
+                                    m.text
+                                )}
+                                <div className={`text-[10px] mt-1 text-right opacity-70 ${m.mine ? "text-indigo-100" : "text-slate-400"}`}>
+                                    {m.time}
                                 </div>
-                            )}
-                            {m.text}
-                            <div className="mt-1 text-xs opacity-70 text-right">
-                                {m.time}
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* INPUT */}
-                <div className="border-t border-gray-300 px-4 py-3">
-                    <div className="flex items-center gap-2">
-                        <button className="p-2 text-slate-400 hover:text-slate-600">
-                            <Paperclip size={18} />
+                {/* CHAT INPUT */}
+                <div className="border-t border-gray-200 px-4 py-4 bg-white">
+                    <div className="flex items-center gap-3">
+                        <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
+                        <button 
+                            onClick={() => fileInputRef.current.click()}
+                            className="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors"
+                        >
+                            <Paperclip size={20} />
                         </button>
 
                         <input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) =>
-                                e.key === "Enter" && sendMessage()
-                            }
-                            placeholder={`Message #${activeChannel.name}`}
-                            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none"
+                            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                            placeholder={`Message ${activeChat.name}...`}
+                            className="flex-1 bg-slate-100 border-none rounded-full px-5 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                         />
 
                         <button
                             onClick={sendMessage}
-                            className="rounded-lg bg-indigo-600 p-2 text-white hover:bg-indigo-700"
+                            className="bg-indigo-600 text-white p-2.5 rounded-full hover:bg-indigo-700 shadow-md transition-all active:scale-95"
                         >
                             <Send size={18} />
                         </button>
                     </div>
                 </div>
             </div>
+
+            {/* ADD MEMBERS MODAL */}
+            {showAddModal && (
+                <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-[400px] p-6 shadow-2xl">
+                        <h2 className="text-xl font-bold mb-4 text-slate-800">Add to Operations Group</h2>
+                        <div className="space-y-3 max-h-60 overflow-y-auto">
+                            {opsData.managers.map((person) => (
+                                <div key={person.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg">
+                                    <div className="flex items-center gap-3">
+                                        <img src={person.avatar} className="h-10 w-10 rounded-full" alt="user" />
+                                        <div>
+                                            <div className="text-sm font-bold text-slate-700">{person.name}</div>
+                                            <div className="text-xs text-slate-500">{person.role}</div>
+                                        </div>
+                                    </div>
+                                    <button className="bg-emerald-500 text-white px-3 py-1 rounded-md text-xs font-bold hover:bg-emerald-600 transition-colors">
+                                        Add
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => setShowAddModal(false)} className="w-full mt-6 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

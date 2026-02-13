@@ -55,6 +55,7 @@ import CfoSettings from "./pages/cfo/CfoSettings";
 import CooDashboard from "./pages/coo/CooDashboard";
 import CooOrganization from "./pages/coo/CooOrganization";
 import CooAnalytics from "./pages/coo/CooAnalytics";
+import CooMeetings from "./pages/coo/CooMeetings";
 import CooReports from "./pages/coo/CooReports";
 import CooDepartmentChat from "./pages/coo/CooDepartmentChat";
 import CooSettings from "./pages/coo/CooSettings";
@@ -198,6 +199,7 @@ export const router = createBrowserRouter([
             { path: "dashboard", element: <CooDashboard /> },
             { path: "organization", element: <CooOrganization /> },
             { path: "analytics", element: <CooAnalytics /> },
+            { path: "meetings", element: <CooMeetings /> },
             { path: "reports", element: <CooReports /> },
             { path: "chat", element: <CooDepartmentChat /> },
             { path: "settings", element: <CooSettings /> },
