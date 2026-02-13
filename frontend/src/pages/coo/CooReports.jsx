@@ -3,42 +3,42 @@ import { FileText, Download, Plus } from "lucide-react";
 const reports = [
     {
         id: 1,
-        name: "Operational Performance Summary",
-        description: "Overall execution efficiency and delivery metrics",
-        date: "June 15, 2024",
-        author: "Operations Office",
+        name: "Supply Chain Efficiency Audit",
+        description: "Quarterly analysis of logistics lead times and transit costs",
+        date: "Feb 12, 2026",
+        author: "Logistics Division",
         action: "download",
     },
     {
         id: 2,
-        name: "Department Execution Status",
-        description: "On-track vs delayed initiatives across departments",
-        date: "June 14, 2024",
-        author: "Program Management",
+        name: "Operational Risk Assessment",
+        description: "Evaluation of safety protocols and equipment maintenance cycles",
+        date: "Feb 10, 2026",
+        author: "Operations Compliance",
         action: "download",
     },
     {
         id: 3,
-        name: "Workforce Utilization Report",
-        description: "Employee utilization, shift coverage, workload balance",
-        date: "June 13, 2024",
-        author: "Operations Analytics",
+        name: "Vendor SLA Compliance Summary",
+        description: "Performance review of 3rd party service providers and partners",
+        date: "Feb 08, 2026",
+        author: "Procurement Office",
         action: "download",
     },
     {
         id: 4,
-        name: "Process Improvement Assessment",
-        description: "Bottlenecks, turnaround time, and efficiency gaps",
-        date: "June 12, 2024",
-        author: "Operations Excellence",
+        name: "Warehouse Overhead & Utility Report",
+        description: "Analysis of physical infrastructure costs across all regional hubs",
+        date: "Feb 05, 2026",
+        author: "Infrastructure Ops",
         action: "download",
     },
     {
         id: 5,
-        name: "SLA & Delivery Compliance",
-        description: "Service level adherence and delivery performance",
-        date: "June 10, 2024",
-        author: "Quality & Compliance",
+        name: "Process Automation ROI Study",
+        description: "Impact of new ERP integration on manual workflow reduction",
+        date: "Feb 01, 2026",
+        author: "Operational Excellence",
         action: "download",
     },
 ];
@@ -49,16 +49,16 @@ const CooReports = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold">Reports</h1>
+                    <h1 className="text-2xl font-bold">Operations Reports</h1>
                     <p className="text-slate-500">
-                        Generate and manage reports
+                        Generate and manage departmental audits and execution logs
                     </p>
                 </div>
 
                 <div className="flex gap-3">
                     <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white">
                         <Plus size={16} />
-                        New Report
+                        New Audit
                     </button>
                     <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white">
                         <Download size={16} />
@@ -70,16 +70,20 @@ const CooReports = () => {
             {/* Filters */}
             <div className="flex flex-wrap gap-4">
                 <select className="rounded-lg border border-gray-300 px-4 py-2">
-                    <option>All</option>
+                    <option>All Operations</option>
+                    <option>Logistics</option>
+                    <option>Supply Chain</option>
+                    <option>Compliance</option>
                 </select>
 
                 <select className="rounded-lg border border-gray-300 px-4 py-2">
+                    <option>This Quarter</option>
                     <option>This Month</option>
                 </select>
 
                 <input
                     type="text"
-                    placeholder="Search Report Name..."
+                    placeholder="Search Operation Report..."
                     className="flex-1 rounded-lg border border-gray-300 px-4 py-2"
                 />
             </div>
@@ -90,7 +94,7 @@ const CooReports = () => {
                 <div className="grid grid-cols-4 gap-4 border-b border-gray-300 bg-slate-50 px-6 py-4 text-sm font-semibold">
                     <div>Report Name</div>
                     <div>Last Updated</div>
-                    <div>Author</div>
+                    <div>Department/Author</div>
                     <div className="text-right">Actions</div>
                 </div>
 
@@ -114,19 +118,19 @@ const CooReports = () => {
                         </div>
 
                         {/* Date */}
-                        <div className="flex items-center">{report.date}</div>
+                        <div className="flex items-center text-sm">{report.date}</div>
 
                         {/* Author */}
-                        <div className="flex items-center">{report.author}</div>
+                        <div className="flex items-center text-sm">{report.author}</div>
 
-                        {/* Action Button (visual only) */}
+                        {/* Action Button */}
                         <div className="flex items-center justify-end">
                             {report.action === "download" ? (
-                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">
+                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white text-sm">
                                     Download
                                 </button>
                             ) : (
-                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">
+                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white text-sm">
                                     View Details
                                 </button>
                             )}

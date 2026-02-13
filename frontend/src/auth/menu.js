@@ -9,7 +9,17 @@ const MENU = {
     ],
     team_lead: ["dashboard", "intern-tasks", "reviews", "meetings", "chat"],
     manager: ["dashboard", "analytics", "reports", "meetings", "chat"],
-    admin: ["dashboard", "users",,"chat", "settings"],
+    admin: ["dashboard", "users", "chat", "settings"],
+    // COO Panel Added Below
+    coo: [
+        "dashboard",
+        "organization",
+        "analytics",
+        "meetings",
+        "reports",
+        "chat",
+        "settings",
+    ],
     cxo: [
         "dashboard",
         "organization",

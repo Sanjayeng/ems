@@ -1,82 +1,157 @@
+import React from 'react';
+import { 
+    Building2, 
+    Users2, 
+    ClipboardCheck, 
+    TrendingUp, 
+    Truck, 
+    ShieldAlert, 
+    Activity 
+} from "lucide-react";
+
 const stats = [
-    { label: "Operational Departments", value: 8, icon: "" },
-    { label: "Operations Managers", value: 22, icon: "" },
-    { label: "Team Leads", value: 46, icon: "" },
-    { label: "Active Workforce", value: 410, icon: "" },
+    { 
+        label: "Operational Efficiency", 
+        value: "94.2%", 
+        icon: <Activity size={20} className="text-emerald-600" />,
+        bgColor: "bg-emerald-100"
+    },
+    { 
+        label: "Total Ops Managers", 
+        value: 22, 
+        icon: <Users2 size={20} className="text-blue-600" />,
+        bgColor: "bg-blue-100"
+    },
+    { 
+        label: "Active Logistics Units", 
+        value: 46, 
+        icon: <Truck size={20} className="text-amber-600" />,
+        bgColor: "bg-amber-100"
+    },
+    { 
+        label: "SLA Compliance", 
+        value: "98.5%", 
+        icon: <ClipboardCheck size={20} className="text-indigo-600" />,
+        bgColor: "bg-indigo-100"
+    },
 ];
 
 const activities = [
     {
-        title: "Cross-Department Process Optimization",
+        title: "Supply Chain Bottleneck Mitigation",
         progress: 88,
+        status: "Critical Phase",
     },
     {
-        title: "Company-wide Operations Review",
+        title: "Standard Operating Procedure (SOP) Audit",
         progress: 75,
+        status: "In Progress",
     },
     {
-        title: "Workforce Productivity Improvement Program",
+        title: "Warehouse Automation Integration",
         progress: 65,
+        status: "Testing",
     },
     {
-        title: "Intern & Graduate Operations Training",
+        title: "Field Operations Safety Training",
         progress: 52,
+        status: "Scheduled",
     },
     {
-        title: "Q4 Operational Readiness Planning",
+        title: "Operations Resource Re-allocation",
         progress: 40,
+        status: "Planning",
     },
 ];
 
 const CooDashboard = () => {
     return (
-        <div className="space-y-8">
-            {/* Stats */}
+        <div className="space-y-8 animate-in fade-in duration-500">
+            {/* Page Header */}
+            <div>
+                <h1 className="text-2xl font-bold text-slate-800">Operations Control Center</h1>
+                <p className="text-slate-500">Real-time oversight of departmental performance and execution.</p>
+            </div>
+
+            {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((s) => (
                     <div
                         key={s.label}
-                        className="rounded-xl border border-gray-300 bg-white p-5 shadow-sm"
+                        className="rounded-xl border border-gray-300 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
                     >
                         <div className="flex items-center justify-between">
-                            <p className="text-sm text-slate-500">{s.label}</p>
-                            {/* <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-lg">
+                            <div>
+                                <p className="text-sm font-medium text-slate-500">{s.label}</p>
+                                <p className="mt-2 text-3xl text-slate-900 font-bold">
+                                    {s.value}
+                                </p>
+                            </div>
+                            <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${s.bgColor}`}>
                                 {s.icon}
-                            </div> */}
+                            </div>
                         </div>
-                        <p className="mt-3 text-2xl text-[#2B7FFF] font-semibold">
-                            {s.value}
-                        </p>
+                        <div className="mt-4 flex items-center text-xs font-medium text-emerald-600">
+                            <TrendingUp size={14} className="mr-1" />
+                            <span>+2.4% from last month</span>
+                        </div>
                     </div>
                 ))}
             </div>
 
-            {/* Organization Activity Overview */}
-            <div className="rounded-xl border border-gray-300 bg-white p-6 shadow-sm">
-                <h2 className="text-lg font-semibold mb-4">
-                    Organization Activity Overview
-                </h2>
+            {/* Department Activity Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 rounded-xl border border-gray-300 bg-white p-6 shadow-sm">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-semibold text-slate-800">
+                            Operations Strategy Progress
+                        </h2>
+                        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded uppercase">Q1 Focus</span>
+                    </div>
 
-                <div className="space-y-4">
-                    {activities.map((a) => (
-                        <div key={a.title}>
-                            <div className="mb-1 flex justify-between text-sm">
-                                <span className="text-slate-700">
-                                    {a.title}
-                                </span>
-                                <span className="text-slate-500">
-                                    {a.progress}%
-                                </span>
-                            </div>
+                    <div className="space-y-6">
+                        {activities.map((a) => (
+                            <div key={a.title}>
+                                <div className="mb-2 flex justify-between text-sm">
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold text-slate-700">{a.title}</span>
+                                        <span className="text-xs text-slate-400">{a.status}</span>
+                                    </div>
+                                    <span className="font-bold text-slate-600">{a.progress}%</span>
+                                </div>
 
-                            <div className="h-2 w-full rounded-full bg-slate-200">
-                                <div
-                                    className="h-2 rounded-full bg-blue-500 transition-all"
-                                    style={{ width: `${a.progress}%` }}
-                                />
+                                <div className="h-2.5 w-full rounded-full bg-slate-100">
+                                    <div
+                                        className="h-2.5 rounded-full bg-indigo-600 transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(79,70,229,0.4)]"
+                                        style={{ width: `${a.progress}%` }}
+                                    />
+                                </div>
                             </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Operations Alerts Section */}
+                <div className="rounded-xl border border-red-200 bg-red-50/30 p-6 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4 text-red-700">
+                        <ShieldAlert size={20} />
+                        <h2 className="font-bold text-lg">Critical Escalations</h2>
+                    </div>
+                    <div className="space-y-4">
+                        <div className="p-3 bg-white border border-red-100 rounded-lg shadow-sm">
+                            <p className="text-xs font-bold text-red-600 uppercase">Logistics</p>
+                            <p className="text-sm font-medium text-slate-800">Delayed shipment in Sector 7 affecting SLA.</p>
+                            <p className="text-[10px] text-slate-400 mt-1">24 mins ago</p>
                         </div>
-                    ))}
+                        <div className="p-3 bg-white border border-red-100 rounded-lg shadow-sm opacity-80">
+                            <p className="text-xs font-bold text-amber-600 uppercase">Facility</p>
+                            <p className="text-sm font-medium text-slate-800">Maintenance scheduled for Main Hub.</p>
+                            <p className="text-[10px] text-slate-400 mt-1">2 hours ago</p>
+                        </div>
+                        <button className="w-full py-2 text-sm font-semibold text-red-700 border border-red-200 rounded-lg hover:bg-red-100 transition-colors">
+                            View All Incidents
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
