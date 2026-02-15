@@ -1,0 +1,56 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Task {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  departmentId  String
+  assignedToId  String
+  assignedById  String
+  dueDate       DateTime
+  priority      String
+  status        String   @default("pending")
+  versionNo     Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  submissions   Submission[]
+  versions      TaskVersion[]
+}
+
+model TaskVersion {
+  id          String   @id @default(uuid())
+  taskId      String
+  versionNo   Int
+  title       String
+  description String
+  dueDate     DateTime
+  changedById String
+  createdAt   DateTime @default(now())
+
+  task        Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Submission {
+  id            String   @id @default(uuid())
+  taskId        String
+  submittedById String
+  versionNo     Int
+  fileUrl       String?
+  externalLink  String?
+  comment       String?
+  status        String   @default("pending")
+  reviewedById  String?
+  reviewComment String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  task          Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
