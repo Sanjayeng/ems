@@ -21,6 +21,8 @@ import TlInternTask from "./pages/tl-panel/TlInternTask";
 import TlSubmissionsReview from "./pages/tl-panel/TlSubmissionsReview";
 import TlMeetings from "./pages/tl-panel/TlMeetings";
 import TlDepartmentChat from "./pages/tl-panel/TlDepartmentChat";
+import InternSubmissionsReview from "./pages/intern/InternSubmissionsReview";
+
 
 /* Manager Pages */
 import ManagerDashboard from "./pages/manager/ManagerDashboard";
@@ -28,6 +30,8 @@ import ManagerAnalytics from "./pages/manager/ManagerAnalytics";
 import ManagerReports from "./pages/manager/ManagerReports";
 import ManagerMeetings from "./pages/manager/ManagerMeetings";
 import ManagerDepartmentChat from "./pages/manager/ManagerDepartmentChat";
+import ManagerSubmissionsReview from "./pages/intern/InternSubmissionsReview"; // ADDED
+
 
 /* Admin Pages */
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -112,6 +116,7 @@ export const router = createBrowserRouter([
       { path: "reviews", element: <TlSubmissionsReview /> },
       { path: "meetings", element: <TlMeetings /> },
       { path: "chat", element: <TlDepartmentChat /> },
+       { path: "review-submissions", element: <InternSubmissionsReview /> },
     ],
   },
 
@@ -130,6 +135,7 @@ export const router = createBrowserRouter([
       { path: "reports", element: <ManagerReports /> },
       { path: "meetings", element: <ManagerMeetings /> },
       { path: "chat", element: <ManagerDepartmentChat /> },
+      { path: "review-submissions", element: <InternSubmissionsReview /> },
     ],
   },
 
