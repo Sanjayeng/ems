@@ -3,6 +3,20 @@ import { FileText, Link as LinkIcon } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 
 const SubmissionRow = ({ item }) => {
+    const handleView = () => {
+        if (item.type === 'file' && item.fileUrl) {
+            // Get the API base URL and construct the full file URL
+            const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const baseUrl = apiBaseUrl.replace('/api', '');
+            const fileUrl = `${baseUrl}${item.fileUrl}`;
+            console.log('[SubmissionRow] Opening file:', fileUrl);
+            window.open(fileUrl, '_blank');
+        } else if (item.type === 'link' && item.externalLink) {
+            console.log('[SubmissionRow] Opening external link:', item.externalLink);
+            window.open(item.externalLink, '_blank');
+        }
+    };
+
     return (
         <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             {/* Left */}
@@ -29,7 +43,11 @@ const SubmissionRow = ({ item }) => {
                 <StatusBadge status={item.status} />
 
                 {/* Action */}
-                <button className="text-sm font-medium text-indigo-600 hover:underline cursor-pointer">
+                <button 
+                    onClick={handleView}
+                    disabled={!item.fileUrl && !item.externalLink}
+                    className="text-sm font-medium text-indigo-600 hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                     View
                 </button>
             </div>

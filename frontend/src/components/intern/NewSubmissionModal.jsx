@@ -13,10 +13,10 @@ const NewSubmissionModal = ({ onClose, onSubmit, pendingTasks = [] }) => {
         if (!task || (type === "file" && !file) || (type === "link" && !link))
             return;
         onSubmit({
-            task,
+            taskId: task,
             type,
             file,
-            link,
+            externalLink: link,
             comment,
         });
     };
@@ -53,9 +53,9 @@ const NewSubmissionModal = ({ onClose, onSubmit, pendingTasks = [] }) => {
                                     No pending tasks
                                 </option>
                             ) : (
-                                pendingTasks.map((t, idx) => (
-                                    <option key={idx} value={t}>
-                                        {t}
+                                pendingTasks.map((t) => (
+                                    <option key={t.id} value={t.id}>
+                                        {t.title}
                                     </option>
                                 ))
                             )}

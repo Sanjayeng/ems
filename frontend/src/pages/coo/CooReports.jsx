@@ -1,4 +1,5 @@
 import { FileText, Download, Plus } from "lucide-react";
+import { downloadReport, downloadAllReports } from "../../utils/downloadReport";
 
 const reports = [
     {
@@ -60,7 +61,10 @@ const CooReports = () => {
                         <Plus size={16} />
                         New Audit
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white">
+                    <button
+                        onClick={() => downloadAllReports(reports, "coo_reports")}
+                        className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white"
+                    >
                         <Download size={16} />
                         Export All
                     </button>
@@ -126,7 +130,10 @@ const CooReports = () => {
                         {/* Action Button */}
                         <div className="flex items-center justify-end">
                             {report.action === "download" ? (
-                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white text-sm">
+                                <button
+                                    onClick={() => downloadReport(report)}
+                                    className="rounded-lg bg-blue-600 px-4 py-2 text-white text-sm"
+                                >
                                     Download
                                 </button>
                             ) : (

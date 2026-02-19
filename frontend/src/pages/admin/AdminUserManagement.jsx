@@ -1,45 +1,95 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import UserModal from "../../components/admin/UserModal";
 
-import { MoreVertical, Plus } from "lucide-react";
-
-const initialUsers = [
-    {
-        id: 1,
-        name: "Alice Johnson",
-        email: "alice@company.com",
-        role: "INTERN",
-        status: "active",
-    },
-    {
-        id: 2,
-        name: "Bob Smith",
-        email: "bob@company.com",
-        role: "TL",
-        status: "active",
-    },
-    {
-        id: 3,
-        name: "Carol Williams",
-        email: "carol@company.com",
-        role: "MANAGER",
-        status: "active",
-    },
-    {
-        id: 4,
-        name: "David Brown",
-        email: "david@company.com",
-        role: "CXO",
-        status: "inactive",
-    },
-];
+import { MoreVertical, Plus, AlertCircle, Loader } from "lucide-react";
+import { tasksApi, submissionsApi } from "../../utils/api";
 
 const AdminUserManagement = () => {
-    const [users, setUsers] = useState(initialUsers);
+    const [users, setUsers] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
     const [editUser, setEditUser] = useState(null);
     const [openMenuId, setOpenMenuId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const allTasks = await tasksApi.getAll();
+            let allSubmissions = [];
+
+            for (const task of allTasks) {
+                try {
+                    const submissions = await submissionsApi.getByTask(task.id);
+                    allSubmissions.push(...submissions);
+                } catch (err) {
+                    console.warn(`Could not fetch submissions for task ${task.id}`);
+                }
+            }
+
+            // Extract unique users from tasks and submissions
+            const userMap = new Map();
+
+            allTasks.forEach((task) => {
+                if (task.createdById) {
+                    userMap.set(task.createdById, {
+                        id: task.createdById,
+                        name: task.createdById.replace(/-/g, ' ').toUpperCase(),
+                        email: `${task.createdById}@company.com`,
+                        role: determineRole(task.createdById),
+                        status: "active",
+                    });
+                }
+                if (task.assignedToId) {
+                    userMap.set(task.assignedToId, {
+                        id: task.assignedToId,
+                        name: task.assignedToId.replace(/-/g, ' ').toUpperCase(),
+                        email: `${task.assignedToId}@company.com`,
+                        role: determineRole(task.assignedToId),
+                        status: "active",
+                    });
+                }
+            });
+
+            allSubmissions.forEach((sub) => {
+                if (sub.submittedById) {
+                    userMap.set(sub.submittedById, {
+                        id: sub.submittedById,
+                        name: sub.submittedById.replace(/-/g, ' ').toUpperCase(),
+                        email: `${sub.submittedById}@company.com`,
+                        role: determineRole(sub.submittedById),
+                        status: "active",
+                    });
+                }
+            });
+
+            setUsers(Array.from(userMap.values()));
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            setError('Failed to load users');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const determineRole = (userId) => {
+        if (userId.includes('intern')) return 'INTERN';
+        if (userId.includes('tl')) return 'TEAM_LEAD';
+        if (userId.includes('manager')) return 'MANAGER';
+        if (userId.includes('ceo')) return 'CEO';
+        if (userId.includes('cfo')) return 'CFO';
+        if (userId.includes('cto')) return 'CTO';
+        if (userId.includes('coo')) return 'COO';
+        if (userId.includes('admin')) return 'ADMIN';
+        return 'USER';
+    };
 
     const addUser = (user) => {
         setUsers([...users, { ...user, id: Date.now() }]);
@@ -53,6 +103,17 @@ const AdminUserManagement = () => {
         setUsers(users.filter((u) => u.id !== id));
         setOpenMenuId(null);
     };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                    <Loader className="mx-auto mb-2 h-8 w-8 animate-spin text-gray-400" />
+                    <p className="text-gray-500">Loading users...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -71,6 +132,14 @@ const AdminUserManagement = () => {
                     Add User
                 </button>
             </div>
+
+            {/* Error Message */}
+            {error && (
+                <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+                    <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+                    <p className="text-sm text-red-800">{error}</p>
+                </div>
+            )}
 
             {/* Table */}
             <div className="rounded-xl border border-gray-300 bg-white">

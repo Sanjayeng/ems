@@ -1,49 +1,94 @@
-import { FileText, Download, Plus } from "lucide-react";
-
-const reports = [
-    {
-        id: 1,
-        name: "Quarterly Financial Performance",
-        description: "Revenue, expenses, and profit analysis",
-        date: "June 15, 2024",
-        author: "Finance Department",
-        action: "download",
-    },
-    {
-        id: 2,
-        name: "Department Budget vs Actual",
-        description: "Allocated budget compared to actual spend",
-        date: "June 14, 2024",
-        author: "Finance Controller",
-        action: "download",
-    },
-    {
-        id: 3,
-        name: "Cash Flow Statement",
-        description: "Operating, investing, and financing cash flows",
-        date: "June 13, 2024",
-        author: "Accounting Team",
-        action: "download",
-    },
-    {
-        id: 4,
-        name: "Expense Audit Report",
-        description: "Cost anomalies and compliance review",
-        date: "June 12, 2024",
-        author: "Internal Audit",
-        action: "download",
-    },
-    {
-        id: 5,
-        name: "Forecast & Runway Analysis",
-        description: "Projected burn rate and cash runway",
-        date: "June 10, 2024",
-        author: "Financial Planning",
-        action: "download",
-    },
-];
+import { useEffect, useState } from "react";
+import { FileText, Download, Plus, AlertCircle, Loader } from "lucide-react";
+import { tasksApi, submissionsApi } from "../../utils/api";
+import { downloadReport, downloadAllReports } from "../../utils/downloadReport";
 
 const CfoReports = () => {
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchReports();
+    }, []);
+
+    const fetchReports = async () => {
+        try {
+            setLoading(true);
+            const allTasks = await tasksApi.getAll();
+            const completedTasks = allTasks.filter(
+                (t) => t.status === "completed"
+            ).length;
+
+            const today = new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
+
+            const baseRevenue = 5 + Math.random() * 15;
+            const generatedReports = [
+                {
+                    id: 1,
+                    name: "Quarterly Financial Performance",
+                    description: `Revenue: $${baseRevenue.toFixed(1)}M, Tasks: ${allTasks.length}`,
+                    date: today,
+                    author: "Finance Department",
+                    action: "download",
+                },
+                {
+                    id: 2,
+                    name: "Department Budget vs Actual",
+                    description: `Allocated budget - Completion: ${Math.round((completedTasks / allTasks.length) * 100)}%`,
+                    date: today,
+                    author: "Finance Controller",
+                    action: "download",
+                },
+                {
+                    id: 3,
+                    name: "Cash Flow Statement",
+                    description: "Operating, investing, and financing cash flows",
+                    date: today,
+                    author: "Accounting Team",
+                    action: "download",
+                },
+                {
+                    id: 4,
+                    name: "Expense Audit Report",
+                    description: "Cost anomalies and compliance review",
+                    date: today,
+                    author: "Internal Audit",
+                    action: "download",
+                },
+            ];
+
+            setReports(generatedReports);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Loader className="h-8 w-8 animate-spin text-indigo-600" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-red-600" />
+                <div>
+                    <p className="font-medium text-red-900">Error loading reports</p>
+                    <p className="text-sm text-red-700">{error}</p>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -60,7 +105,10 @@ const CfoReports = () => {
                         <Plus size={16} />
                         New Report
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white">
+                    <button
+                        onClick={() => downloadAllReports(reports, "cfo_reports")}
+                        className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white"
+                    >
                         <Download size={16} />
                         Export All
                     </button>
@@ -122,7 +170,10 @@ const CfoReports = () => {
                         {/* Action Button (visual only) */}
                         <div className="flex items-center justify-end">
                             {report.action === "download" ? (
-                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">
+                                <button
+                                    onClick={() => downloadReport(report)}
+                                    className="rounded-lg bg-blue-600 px-4 py-2 text-white"
+                                >
                                     Download
                                 </button>
                             ) : (

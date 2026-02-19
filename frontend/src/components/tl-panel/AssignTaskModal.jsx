@@ -1,29 +1,29 @@
 import { useState } from "react";
 
+// Real interns seeded in the database
 const interns = [
-    { id: 1, name: "Sarah Jones", avatar: "https://i.pravatar.cc/100?img=1" },
-    { id: 2, name: "David Lee", avatar: "https://i.pravatar.cc/100?img=2" },
-    { id: 3, name: "Emily Chen", avatar: "https://i.pravatar.cc/100?img=3" },
-    { id: 4, name: "Michael Brown", avatar: "https://i.pravatar.cc/100?img=4" },
-    {
-        id: 5,
-        name: "Jessica Wilson",
-        avatar: "https://i.pravatar.cc/100?img=5",
-    },
+    { id: 'intern-1', name: "Sarah Jones", avatar: "https://i.pravatar.cc/100?img=1" },
+    { id: 'intern-2', name: "David Lee", avatar: "https://i.pravatar.cc/100?img=2" },
+    { id: 'intern-3', name: "Emily Chen", avatar: "https://i.pravatar.cc/100?img=3" },
+    { id: 'intern-4', name: "Michael Brown", avatar: "https://i.pravatar.cc/100?img=4" },
+    { id: 'intern-5', name: "Jessica Wilson", avatar: "https://i.pravatar.cc/100?img=5" },
 ];
 
 const AssignTaskModal = ({ onClose, onSubmit }) => {
     const [form, setForm] = useState({
         internId: "",
         task: "",
-        priority: "Medium",
+        priority: "medium",
         deadline: "",
-        status: "Not Started",
+        status: "pending",
     });
 
     const handleSubmit = () => {
-        const intern = interns.find((i) => i.id === Number(form.internId));
-        if (!intern || !form.task || !form.deadline) return;
+        const intern = interns.find((i) => i.id === form.internId);
+        if (!intern || !form.task || !form.deadline) {
+            alert("Please fill in all fields");
+            return;
+        }
 
         onSubmit({
             intern,
@@ -33,7 +33,13 @@ const AssignTaskModal = ({ onClose, onSubmit }) => {
             status: form.status,
         });
 
-        onClose();
+        setForm({
+            internId: "",
+            task: "",
+            priority: "medium",
+            deadline: "",
+            status: "pending",
+        });
     };
 
     return (
@@ -64,24 +70,26 @@ const AssignTaskModal = ({ onClose, onSubmit }) => {
                 <div className="grid grid-cols-2 gap-3">
                     <select
                         className="rounded border px-3 py-2"
+                        value={form.priority}
                         onChange={(e) =>
                             setForm({ ...form, priority: e.target.value })
                         }
                     >
-                        <option>High</option>
-                        <option>Medium</option>
-                        <option>Low</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
                     </select>
 
                     <select
                         className="rounded border px-3 py-2"
+                        value={form.status}
                         onChange={(e) =>
                             setForm({ ...form, status: e.target.value })
                         }
                     >
-                        <option>Not Started</option>
-                        <option>In Progress</option>
-                        <option>Completed</option>
+                        <option value="pending">Not Started</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
                     </select>
                 </div>
 
