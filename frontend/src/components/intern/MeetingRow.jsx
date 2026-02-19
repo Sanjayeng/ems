@@ -1,8 +1,10 @@
 import { Video, Calendar, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 
 const MeetingRow = ({ meeting }) => {
+    const navigate = useNavigate();
     return (
         <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             {/* Left */}
@@ -32,10 +34,18 @@ const MeetingRow = ({ meeting }) => {
                 className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition"
             >
                 <Video size={16} />
-                Join
+               <button
+              onClick={() => navigate(`/intern/intern-meeting-room/${meeting.id}`)}
+                className="rounded-md bg-indigo-600 px-4 py-2 text-white text-sm"
+            >
+                {meeting.status === "Scheduled" ? "Start" : "Join"}
+            </button>
             </Link>
         </div>
     );
 };
 
 export default MeetingRow;
+
+
+

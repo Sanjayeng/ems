@@ -8,7 +8,7 @@ const MENU = {
     "profile",
   ],
   team_lead: ["dashboard", "intern-tasks", "reviews", "meetings", "chat","review-submissions"],
-  manager: ["dashboard", "analytics", "reports", "meetings", "chat","review-submissions"],
+  manager: ["dashboard", "analytics", "reports", "meetings", "chat","review-submissions",],
   admin: ["dashboard", "users", "chat", "settings"],
   // COO Panel Added Below
   coo: [

@@ -1,6 +1,8 @@
 import MeetingStatusBadge from "./MeetingStatusBadge";
+import { useNavigate } from "react-router-dom";
 
 const MeetingCard = ({ meeting, joinOnly = false }) => {
+    const navigate = useNavigate();
     return (
         <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-2">
             <h3 className="font-medium text-slate-900">{meeting.title}</h3>
@@ -16,7 +18,10 @@ const MeetingCard = ({ meeting, joinOnly = false }) => {
             <div className="flex items-center justify-between pt-2">
                 <MeetingStatusBadge value={meeting.status} />
 
-                <button className="rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-700">
+                <button
+                 onClick={() => navigate(`/team_lead/tl-meeting-room/${meeting.id}`)} 
+                // disabled={meeting.status !== "Scheduled"}
+                 className="rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-700">
                     {joinOnly ? "Join" : "Start"}
                 </button>
             </div>

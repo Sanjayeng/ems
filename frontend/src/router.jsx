@@ -14,6 +14,8 @@ import InternSubmissions from "./pages/intern/InternSubmissions";
 import InternMeetings from "./pages/intern/InternMeetings";
 import InternDepartmentChat from "./pages/intern/InternDepartmentChat";
 import InternProfile from "./pages/intern/InternProfile";
+import InternMeetingRoom from "./pages/intern/InternMeetingRoom";
+
 
 /* Team Lead Pages */
 import TlDashboard from "./pages/tl-panel/TlDashboard";
@@ -22,6 +24,19 @@ import TlSubmissionsReview from "./pages/tl-panel/TlSubmissionsReview";
 import TlMeetings from "./pages/tl-panel/TlMeetings";
 import TlDepartmentChat from "./pages/tl-panel/TlDepartmentChat";
 import InternSubmissionsReview from "./pages/intern/InternSubmissionsReview";
+import TlMeetingRoom from "./pages/tl-panel/TlMeetingRoom";
+
+
+/* Manager Pages */
+// import ManagerDashboard from "./pages/manager/ManagerDashboard";
+// import ManagerAnalytics from "./pages/manager/ManagerAnalytics";
+// import ManagerReports from "./pages/manager/ManagerReports";
+// import ManagerMeetings from "./pages/manager/ManagerMeetings";
+// import ManagerDepartmentChat from "./pages/manager/ManagerDepartmentChat";
+// import ManagerSubmissionsReview from "./pages/intern/InternSubmissionsReview"; // ADDED
+// import TlMeetings from "./pages/tl-panel/TlMeetings";
+// import TlDepartmentChat from "./pages/tl-panel/TlDepartmentChat";
+// import InternSubmissionsReview from "./pages/intern/InternSubmissionsReview";
 
 
 /* Manager Pages */
@@ -30,7 +45,8 @@ import ManagerAnalytics from "./pages/manager/ManagerAnalytics";
 import ManagerReports from "./pages/manager/ManagerReports";
 import ManagerMeetings from "./pages/manager/ManagerMeetings";
 import ManagerDepartmentChat from "./pages/manager/ManagerDepartmentChat";
-import ManagerSubmissionsReview from "./pages/intern/InternSubmissionsReview"; // ADDED
+import MeetingRoom from "./pages/manager/MeetingRoom";
+
 
 
 /* Admin Pages */
@@ -77,6 +93,8 @@ import CeoReports from "./pages/ceo/CeoReports";
 import CeoAnnouncements from "./pages/ceo/CeoAnnouncements";
 import CeoOrganizationChat from "./pages/ceo/CeoOrganizationChat";
 import CeoSettings from "./pages/ceo/CeoSettings";
+import CeoMeetingRooms from "./pages/ceo/CeoMeetingRooms";
+
 
 export const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -98,6 +116,7 @@ export const router = createBrowserRouter([
       { path: "meetings", element: <InternMeetings /> },
       { path: "chat", element: <InternDepartmentChat /> },
       { path: "profile", element: <InternProfile /> },
+     { path: "intern-meeting-room/:id", element: <InternMeetingRoom /> },
     ],
   },
 
@@ -116,7 +135,9 @@ export const router = createBrowserRouter([
       { path: "reviews", element: <TlSubmissionsReview /> },
       { path: "meetings", element: <TlMeetings /> },
       { path: "chat", element: <TlDepartmentChat /> },
-       { path: "review-submissions", element: <InternSubmissionsReview /> },
+      { path: "review-submissions", element: <InternSubmissionsReview /> },
+      { path: "tl-meeting-room/:id", element: <TlMeetingRoom /> },
+     
     ],
   },
 
@@ -136,6 +157,10 @@ export const router = createBrowserRouter([
       { path: "meetings", element: <ManagerMeetings /> },
       { path: "chat", element: <ManagerDepartmentChat /> },
       { path: "review-submissions", element: <InternSubmissionsReview /> },
+      { path: "meeting-room/:id", element: <MeetingRoom /> },
+      // { path: "meeting-room/:id", element: <MeetingRoom /> }
+
+    
     ],
   },
 
@@ -236,6 +261,7 @@ export const router = createBrowserRouter([
       { path: "announcements", element: <CeoAnnouncements /> },
       { path: "chat", element: <CeoOrganizationChat /> },
       { path: "settings", element: <CeoSettings /> },
+      { path: "ceo-meeting-rooms/:id", element: <CeoMeetingRooms /> },
     ],
   },
 ]);
