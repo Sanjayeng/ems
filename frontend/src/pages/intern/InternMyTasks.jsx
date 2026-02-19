@@ -1,86 +1,90 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import TaskCard from "../../components/intern/TaskCard";
+import { tasksApi } from "../../utils/api";
 
 const TABS = [
     { key: "all", label: "All Tasks" },
-    { key: "pending", label: "Pending", count: 2 },
-    { key: "in-progress", label: "In Progress", count: 2 },
-    { key: "review", label: "Review" },
+    { key: "pending", label: "Pending" },
+    { key: "in-progress", label: "In Progress" },
     { key: "completed", label: "Completed" },
-];
-
-const TASKS = [
-    {
-        id: 1,
-        title: "Implement user authentication flow",
-        status: "in-progress",
-        priority: "high",
-        due: "Feb 1",
-        overdue: true,
-        time: "12/24h",
-        tags: ["authentication", "security", "frontend"],
-        assignee: "AT",
-    },
-    {
-        id: 2,
-        title: "Design dashboard mockups",
-        status: "completed",
-        priority: "medium",
-        due: "Jan 20",
-        overdue: false,
-        time: "14/16h",
-        tags: ["design", "ui", "dashboard"],
-        assignee: "JW",
-    },
-    {
-        id: 3,
-        title: "Set up CI/CD pipeline",
-        status: "review",
-        priority: "high",
-        due: "Jan 25",
-        overdue: true,
-        time: "10/12h",
-        tags: ["devops", "automation", "backend"],
-        assignee: "RG",
-    },
-    {
-        id: 4,
-        title: "Create component library documentation",
-        status: "pending",
-        priority: "medium",
-        due: "Feb 10",
-        overdue: true,
-        time: "0/20h",
-        tags: ["documentation", "frontend"],
-        assignee: "SK",
-    },
-    {
-        id: 5,
-        title: "User onboarding flow",
-        status: "pending",
-        priority: "high",
-        due: "Feb 15",
-        overdue: true,
-        time: "0/28h",
-        tags: ["frontend", "ux", "onboarding"],
-        assignee: "AT",
-    },
 ];
 
 const InternMyTasks = () => {
     const [activeTab, setActiveTab] = useState("all");
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const internId = "intern-1"; // TODO: Get from auth context
+
+    // Fetch tasks assigned to this intern
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+    const fetchTasks = async () => {
+        try {
+            setLoading(true);
+            const allTasks = await tasksApi.getAll();
+            
+            // Filter tasks assigned to this intern
+            const internTasks = allTasks.filter(task => task.assignedToId === internId);
+            
+            // Map API response to component format
+            const mappedTasks = internTasks.map(task => ({
+                id: task.id,
+                title: task.title,
+                description: task.description,
+                status: task.status === 'pending' ? 'pending' : 
+                        task.status === 'in_progress' ? 'in-progress' : 
+                        task.status === 'completed' ? 'completed' : task.status,
+                priority: task.priority.charAt(0).toUpperCase() + task.priority.slice(1),
+                due: new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                overdue: new Date(task.dueDate) < new Date(),
+            }));
+            
+            setTasks(mappedTasks);
+            setError(null);
+        } catch (err) {
+            setError(err.message);
+            console.error('Failed to fetch tasks:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const filteredTasks =
         activeTab === "all"
-            ? TASKS
-            : TASKS.filter((t) => t.status === activeTab);
+            ? tasks
+            : tasks.filter((t) => t.status === activeTab);
+    
+    // Calculate counts
+    const tabsWithCounts = TABS.map(tab => ({
+        ...tab,
+        count: tab.key === 'all' ? tasks.length :
+               tasks.filter(t => t.status === tab.key).length
+    }));
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-96">
+                <p className="text-slate-600">Loading tasks...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
+            {/* Error message */}
+            {error && (
+                <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-red-700">
+                    {error}
+                </div>
+            )}
+
             {/* Tabs */}
             <div className="flex flex-wrap gap-2 rounded-xl bg-slate-100 p-2">
-                {TABS.map((tab) => (
+                {tabsWithCounts.map((tab) => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
@@ -92,7 +96,7 @@ const InternMyTasks = () => {
               }`}
                     >
                         {tab.label}
-                        {tab.count !== undefined && (
+                        {tab.count > 0 && (
                             <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs text-slate-700">
                                 {tab.count}
                             </span>
@@ -110,9 +114,15 @@ const InternMyTasks = () => {
                 </h2>
 
                 <div className="space-y-4">
-                    {filteredTasks.map((task) => (
-                        <TaskCard key={task.id} task={task} />
-                    ))}
+                    {filteredTasks.length > 0 ? (
+                        filteredTasks.map((task) => (
+                            <TaskCard key={task.id} task={task} />
+                        ))
+                    ) : (
+                        <p className="text-center text-slate-500 py-8">
+                            No {activeTab === 'all' ? 'tasks' : activeTab} tasks yet
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

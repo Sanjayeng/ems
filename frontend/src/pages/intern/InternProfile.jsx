@@ -1,19 +1,29 @@
 import { Mail } from "lucide-react";
+import { useSelector } from "react-redux";
 
 import Section from "../../components/intern/Section";
 import InfoRow from "../../components/intern/InfoRow";
 
-const profile = {
-    name: "Sophia Kim",
-    role: "Frontend Intern",
-    email: "sophia.kim@company.com",
-    department: "Engineering",
-    joiningDate: "Jan 15, 2026",
-    mentor: "John Williams",
-    skills: ["React", "Tailwind CSS", "JavaScript", "UI Design"],
-};
-
 const InternProfile = () => {
+    // Get user info from Redux auth
+    const { name, email } = useSelector((state) => state.auth || {});
+
+    const profile = {
+        name: name || "Sophia Kim",
+        role: "Frontend Intern",
+        email: email || "sophia.kim@company.com",
+        department: "Engineering",
+        joiningDate: "Jan 15, 2026",
+        mentor: "John Williams",
+        skills: ["React", "Tailwind CSS", "JavaScript", "UI Design"],
+    };
+
+    // Generate initials from name
+    const initials = (profile.name || "User")
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -32,7 +42,7 @@ const InternProfile = () => {
                     <div className="flex flex-col items-center text-center">
                         {/* Avatar */}
                         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-indigo-100 text-3xl font-semibold text-indigo-600">
-                            SK
+                            {initials}
                         </div>
 
                         <h2 className="mt-4 text-lg font-semibold text-slate-900">

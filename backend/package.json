@@ -4,17 +4,31 @@
   "description": "Organization Work Management System Backend",
   "main": "server.js",
  "scripts": {
-  "start": "node server.js",
-  "build": "prisma generate"
-},
-
+    "start": "node server.js",
+    "dev": "vercel dev --listen 5000",
+    "build": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "node prisma/seed.js",
+    "test": "jest --runInBand"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "author": "Sanjay",
   "license": "ISC",
   "devDependencies": {
-    "prisma": "^5.16.2"
+    "prisma": "^5.16.2",
+    "jest": "^29.6.1",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "@prisma/client": "^5.16.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "multer": "1.4.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

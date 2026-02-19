@@ -1,11 +1,13 @@
-const express = require("express");
-const app = express();
+const app = require("./app");
 
-app.use(express.json());
+const PORT = process.env.PORT || 5000;
 
-const taskRoutes = require("./modules/tasks/task.routes");
-app.use("/tasks", taskRoutes);
+// Start server only when run directly (local dev / container).
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
-console.log("Task routes loaded");
-
+// Export app for serverless platforms (Vercel) and tests
 module.exports = app;

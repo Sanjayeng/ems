@@ -1,33 +1,81 @@
-import { FileText, Download, Plus } from "lucide-react";
-
-const REPORTS = [
-    {
-        id: 1,
-        title: "Weekly Performance Report",
-        category: "Performance",
-        date: "2024-01-14",
-    },
-    {
-        id: 2,
-        title: "Budget Analysis Q1",
-        category: "Finance",
-        date: "2024-01-12",
-    },
-    {
-        id: 3,
-        title: "Resource Allocation Report",
-        category: "Resources",
-        date: "2024-01-10",
-    },
-    {
-        id: 4,
-        title: "Project Status Update",
-        category: "Projects",
-        date: "2024-01-08",
-    },
-];
+import { useEffect, useState } from "react";
+import { FileText, Download, Plus, AlertCircle, Loader } from "lucide-react";
+import { tasksApi, submissionsApi } from "../../utils/api";
+import { downloadReport } from "../../utils/downloadReport";
 
 const ManagerReports = () => {
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchReports();
+    }, []);
+
+    const fetchReports = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const allTasks = await tasksApi.getAll();
+            const allSubmissions = [];
+
+            for (const task of allTasks) {
+                try {
+                    const submissions = await submissionsApi.getByTask(task.id);
+                    allSubmissions.push(...submissions);
+                } catch (err) {
+                    console.warn(`Could not fetch submissions for task ${task.id}`);
+                }
+            }
+
+            // Generate reports from real data
+            const generatedReports = [
+                {
+                    id: 1,
+                    title: "Weekly Performance Report",
+                    category: "Performance",
+                    date: new Date().toISOString().split('T')[0],
+                },
+                {
+                    id: 2,
+                    title: `Tasks Summary (${allTasks.length} total)`,
+                    category: "Performance",
+                    date: new Date().toISOString().split('T')[0],
+                },
+                {
+                    id: 3,
+                    title: `Submissions Report (${allSubmissions.length} submissions)`,
+                    category: "Resources",
+                    date: new Date().toISOString().split('T')[0],
+                },
+                {
+                    id: 4,
+                    title: "Project Status Update",
+                    category: "Projects",
+                    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+                },
+            ];
+
+            setReports(generatedReports);
+        } catch (err) {
+            console.error('Error fetching reports:', err);
+            setError('Failed to load reports');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                    <Loader className="mx-auto mb-2 h-8 w-8 animate-spin text-gray-400" />
+                    <p className="text-gray-500">Loading reports...</p>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="space-y-8">
             {/* HEADER */}
@@ -49,7 +97,14 @@ const ManagerReports = () => {
 
             {/* REPORT LIST */}
             <div className="space-y-4">
-                {REPORTS.map((report) => (
+                {error && (
+                    <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+                        <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+                        <p className="text-sm text-red-800">{error}</p>
+                    </div>
+                )}
+                {reports.length > 0 ? (
+                reports.map((report) => (
                     <div
                         key={report.id}
                         className="flex items-center justify-between rounded-xl border border-gray-300 bg-white p-6"
@@ -70,12 +125,20 @@ const ManagerReports = () => {
                         </div>
 
                         {/* BLUE DOWNLOAD BUTTON */}
-                        <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                        <button
+                            onClick={() => downloadReport(report)}
+                            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                        >
                             <Download size={16} />
                             Download
                         </button>
                     </div>
-                ))}
+                ))
+                ) : (
+                    <div className="rounded-xl border border-gray-300 bg-white p-6 text-center text-gray-500">
+                        No reports available
+                    </div>
+                )}
             </div>
         </div>
     );

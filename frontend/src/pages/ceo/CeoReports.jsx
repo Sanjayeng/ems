@@ -1,33 +1,85 @@
-import { FileText, Download, Plus } from "lucide-react";
-
-const reports = [
-    {
-        id: 1,
-        name: "Quarterly Sales Performance",
-        description: "Performance from last month",
-        date: "June 15, 2024",
-        author: "Jane Doe",
-        action: "view",
-    },
-    {
-        id: 2,
-        name: "Project Status Summary",
-        description: "Overall project progress",
-        date: "June 15, 2024",
-        author: "Dean Delen",
-        action: "view",
-    },
-    {
-        id: 3,
-        name: "Team Utilization Breakdown",
-        description: "Overtime analysis, 85%",
-        date: "June 15, 2024",
-        author: "Fume Telen",
-        action: "download",
-    },
-];
+import { useEffect, useState } from "react";
+import { FileText, Download, Plus, AlertCircle, Loader } from "lucide-react";
+import { tasksApi, submissionsApi } from "../../utils/api";
+import { downloadReport, downloadAllReports } from "../../utils/downloadReport";
 
 const CeoReports = () => {
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchReports();
+    }, []);
+
+    const fetchReports = async () => {
+        try {
+            setLoading(true);
+            const allTasks = await tasksApi.getAll();
+            const completedTasks = allTasks.filter(
+                (t) => t.status === "completed"
+            ).length;
+
+            const today = new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
+
+            const generatedReports = [
+                {
+                    id: 1,
+                    name: `Quarterly Sales Performance (${allTasks.length} Tasks)`,
+                    description: `Performance from last month - ${completedTasks} completed`,
+                    date: today,
+                    author: "CEO Office",
+                    action: "view",
+                },
+                {
+                    id: 2,
+                    name: "Project Status Summary",
+                    description: `Overall project progress - ${Math.round((completedTasks / allTasks.length) * 100)}% completion`,
+                    date: today,
+                    author: "Project Management",
+                    action: "view",
+                },
+                {
+                    id: 3,
+                    name: `Team Utilization Analysis (${Math.min(allTasks.length, 100)}%)`,
+                    description: "Resource allocation and team productivity insights",
+                    date: today,
+                    author: "Human Resources",
+                    action: "download",
+                },
+            ];
+
+            setReports(generatedReports);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Loader className="h-8 w-8 animate-spin text-indigo-600" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 flex items-center gap-3">
+                <AlertCircle className="h-5 w-5 text-red-600" />
+                <div>
+                    <p className="font-medium text-red-900">Error loading reports</p>
+                    <p className="text-sm text-red-700">{error}</p>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -44,7 +96,10 @@ const CeoReports = () => {
                         <Plus size={16} />
                         New Report
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white">
+                    <button
+                        onClick={() => downloadAllReports(reports, "ceo_reports")}
+                        className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white"
+                    >
                         <Download size={16} />
                         Export All
                     </button>
@@ -106,7 +161,10 @@ const CeoReports = () => {
                         {/* Action Button (visual only) */}
                         <div className="flex items-center justify-end">
                             {report.action === "download" ? (
-                                <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">
+                                <button
+                                    onClick={() => downloadReport(report)}
+                                    className="rounded-lg bg-blue-600 px-4 py-2 text-white"
+                                >
                                     Download
                                 </button>
                             ) : (
