@@ -6,13 +6,14 @@ const Meetings = () => {
     const [showModal, setShowModal] = useState(false);
 
     const [myMeetings, setMyMeetings] = useState([
-        {
+        {   
+            id: "meeting-121",
             title: "Weekly Sync - Interns Group A",
             datetime: "Mon, Dec 29, 2025 at 10:00 AM",
             participants: ["John S.", "Sarah L.", "Emily C."],
             status: "Scheduled",
         },
-        {
+        {   id: "meeting-122", 
             title: "1-on-1 with David Lee",
             datetime: "Mon, Dec 29, 2025 at 1:30 PM",
             participants: ["David Lee"],
@@ -21,7 +22,8 @@ const Meetings = () => {
     ]);
 
     const managerMeetings = [
-        {
+        { 
+            id: "meeting-123",
             title: "Team Lead Monthly Sync",
             datetime: "Tue, Dec 30, 2025 at 11:00 AM",
             participants: ["All Team Leads", "Michael B. (Manager)"],

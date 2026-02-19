@@ -1,115 +1,186 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+// Dummy logged-in user
+const currentUser = {
+  name: "Ritesh",
+  role: "Manager", // Change: Intern | Team Lead | Manager
+};
+
+const initialData = [
+  {
+    id: 1,
+    intern: "Rahul",
+    task: "Dashboard UI",
+    submittedOn: "Feb 10, 2026",
+    status: "pending",
+    reviewer: "-",
+    fileUrl: "https://example.com/file1.pdf",
+    comments: [],
+  },
+  {
+    id: 2,
+    intern: "Priya",
+    task: "API Integration",
+    submittedOn: "Feb 12, 2026",
+    status: "approved",
+    reviewer: "Team Lead",
+    fileUrl: "https://example.com/file2.pdf",
+    comments: ["Good work"],
+  },
+];
 
 const InternSubmissionsReview = () => {
-  const navigate = useNavigate();
+  const [submissions, setSubmissions] = useState(initialData);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  const [submissions, setSubmissions] = useState([
-    {
-      id: 1,
-      intern: "Rahul",
-      task: "Dashboard Design",
-      submittedOn: "Feb 10, 2026",
-      status: "pending",
-    },
-    {
-      id: 2,
-      intern: "Priya",
-      task: "API Integration",
-      submittedOn: "Feb 12, 2026",
-      status: "approved",
-    },
-  ]);
-
-  const updateStatus = (id, status) => {
+  // Approve / Reject
+  const handleStatusChange = (id, status) => {
     setSubmissions((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, status } : item
+        item.id === id
+          ? { ...item, status, reviewer: currentUser.role }
+          : item
       )
     );
   };
 
-  return (
-    <div className="p-6 space-y-6">
-      
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">
-          Review All Intern Submissions
-        </h1>
+  // Add Comment
+  const handleAddComment = (id, text) => {
+    setSubmissions((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, comments: [...item.comments, text] }
+          : item
+      )
+    );
+  };
 
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-slate-800 text-white px-4 py-2 rounded-md hover:bg-slate-700 transition"
+  // Filter + Search
+  const filteredData = submissions
+    .filter((s) =>
+      s.intern.toLowerCase().includes(search.toLowerCase())
+    )
+    .filter((s) =>
+      filterStatus === "all" ? true : s.status === filterStatus
+    );
+
+  return (
+    <div className="space-y-6 p-6">
+      <h1 className="text-2xl font-semibold">
+        Intern Submissions Review
+      </h1>
+
+      {/* Search + Filter */}
+      <div className="flex gap-4">
+        <input
+          type="text"
+          placeholder="Search by intern name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border px-3 py-2 rounded w-64"
+        />
+
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="border px-3 py-2 rounded"
         >
-          ← Back
-        </button>
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-left">
-            <tr>
-              <th className="p-4">Intern</th>
-              <th className="p-4">Task</th>
-              <th className="p-4">Submitted On</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Action</th>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y">
-            {submissions.map((item) => (
-              <tr key={item.id}>
-                <td className="p-4 font-medium">{item.intern}</td>
-                <td className="p-4">{item.task}</td>
-                <td className="p-4">{item.submittedOn}</td>
-
-                <td className="p-4">
-                  <span
-                    className={`px-3 py-1 text-xs rounded-full ${
-                      item.status === "approved"
-                        ? "bg-green-100 text-green-600"
-                        : item.status === "rejected"
-                        ? "bg-red-100 text-red-600"
-                        : "bg-yellow-100 text-yellow-600"
-                    }`}
-                  >
+      <div className="bg-white border rounded-xl">
+        {filteredData.map((item) => (
+          <div key={item.id} className="border-b p-4 space-y-2">
+            <div className="flex justify-between">
+              <div>
+                <p className="font-semibold">{item.intern}</p>
+                <p>{item.task}</p>
+                <p className="text-sm text-gray-500">
+                  {item.submittedOn}
+                </p>
+                <p className="text-sm">
+                  Status:{" "}
+                  <span className="font-medium">
                     {item.status}
                   </span>
-                </td>
+                </p>
+              </div>
 
-                <td className="p-4 space-x-2">
-                  {item.status === "pending" && (
-                    <>
-                      <button
-                        onClick={() =>
-                          updateStatus(item.id, "approved")
-                        }
-                        className="bg-green-500 text-white px-3 py-1 text-xs rounded-md hover:bg-green-600"
-                      >
-                        Approve
-                      </button>
+              {/* Role-based Buttons */}
+              {currentUser.role !== "Intern" &&
+                item.status === "pending" && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() =>
+                        handleStatusChange(item.id, "approved")
+                      }
+                      class="bg-green-500 text-white h-7 px-3 text-sm rounded-md"
+                    >
+                      Approve
+                    </button>
 
-                      <button
-                        onClick={() =>
-                          updateStatus(item.id, "rejected")
-                        }
-                        className="bg-red-500 text-white px-3 py-1 text-xs rounded-md hover:bg-red-600"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    <button
+                      onClick={() =>
+                        handleStatusChange(item.id, "rejected")
+                      }
+                      class="bg-red-500 text-white h-7 px-3 text-sm rounded-md"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                )}
+            </div>
+
+            {/* Reviewer */}
+            {item.status !== "pending" && (
+              <p className="text-sm text-gray-500">
+                Reviewed by {item.reviewer}
+              </p>
+            )}
+
+            {/* File Preview */}
+            <a
+              href={item.fileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-600 underline text-sm"
+            >
+              Preview File
+            </a>
+
+            {/* Comments */}
+            <div className="mt-2">
+              <p className="text-sm font-medium">Comments:</p>
+
+              {item.comments.map((c, i) => (
+                <p key={i} className="text-sm text-gray-600">
+                  • {c}
+                </p>
+              ))}
+
+              {currentUser.role !== "Intern" && (
+                <input
+                  type="text"
+                  placeholder="Add comment..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleAddComment(item.id, e.target.value);
+                      e.target.value = "";
+                    }
+                  }}
+                  className="border mt-2 px-2 py-1 rounded w-full"
+                />
+              )}
+            </div>
+          </div>
+        ))}
       </div>
-
     </div>
   );
 };
